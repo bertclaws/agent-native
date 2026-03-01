@@ -81,6 +81,8 @@ templates=(
   "Makefile.harness"
   "scripts/audit_harness.sh"
   "scripts/verify_customized.sh"
+  "scripts/harness/setup.sh"
+  "scripts/harness/format.sh"
   "scripts/harness/smoke.sh"
   "scripts/harness/test.sh"
   "scripts/harness/lint.sh"
@@ -112,6 +114,8 @@ fi
 chmod +x \
   "$target_path/scripts/audit_harness.sh" \
   "$target_path/scripts/verify_customized.sh" \
+  "$target_path/scripts/harness/setup.sh" \
+  "$target_path/scripts/harness/format.sh" \
   "$target_path/scripts/harness/smoke.sh" \
   "$target_path/scripts/harness/test.sh" \
   "$target_path/scripts/harness/lint.sh" \

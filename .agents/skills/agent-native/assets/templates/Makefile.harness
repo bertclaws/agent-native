@@ -1,4 +1,10 @@
-.PHONY: smoke test lint typecheck check ci verify observe
+.PHONY: setup format smoke test lint typecheck check ci verify observe
+
+setup:
+	@./scripts/harness/setup.sh
+
+format:
+	@./scripts/harness/format.sh
 
 smoke:
 	@./scripts/harness/smoke.sh

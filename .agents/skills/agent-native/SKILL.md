@@ -18,12 +18,12 @@ Operationalize OpenAI's Harness Engineering practices in any repo so coding agen
 ```
 
 This creates:
-- `AGENTS.md` — agent-facing docs (commands, constraints, guardrails)
+- `AGENTS.md` — agent-facing docs (commands, constraints, guardrails, debugging loop)
 - `PLANS.md` — durable planning context for multi-step tasks
 - `docs/ARCHITECTURE.md` — module boundaries and data flow
 - `docs/OBSERVABILITY.md` — JSONL logging convention + jq query patterns
-- `Makefile.harness` — `make smoke`, `make check`, `make ci`
-- `scripts/harness/` — deterministic wrappers (smoke, test, lint, typecheck)
+- `Makefile.harness` — `make setup`, `make format`, `make smoke`, `make check`, `make ci`
+- `scripts/harness/` — deterministic wrappers (setup, format, smoke, test, lint, typecheck)
 - `.harness/` — JSONL telemetry files + jq query library (gitignored)
 - `.github/workflows/harness.yml` — CI integration
 
@@ -43,7 +43,7 @@ This creates:
 ## The Nine Practices
 
 ### 1. Make Easy To Do Hard Thing
-One command for every high-value task: `make smoke`, `make check`, `make ci`. No manual prep.
+One command for every high-value task: `make setup`, `make format`, `make smoke`, `make check`, `make ci`. No manual prep.
 
 ### 2. Communicate Actionable Constraints With Compact Docs
 `AGENTS.md` — short, concrete, command-first. Not narrative prose.
@@ -99,10 +99,11 @@ See `references/static-analysis.md` for per-language tool recommendations (ESLin
 2. **Bootstrap** — `bootstrap_harness.sh` installs templates (won't overwrite existing files)
 3. **Read the output** — bootstrap prints next steps; follow them in order
 4. **Customize docs** — AGENTS.md, docs/ARCHITECTURE.md (replace ALL placeholders), docs/OBSERVABILITY.md
-5. **Fill in scripts** — `scripts/harness/*.sh` with real project commands (not stubs)
-6. **Add observability** — implement `hlog()` per the language example in docs/OBSERVABILITY.md; follow the Level Policy
-7. **Validate** — `make -f Makefile.harness ci` must pass; `scripts/verify_customized.sh .` catches leftover boilerplate; `scripts/audit_harness.sh .` checks for gaps
-8. **Iterate** — observe an agent run, patch gaps, re-audit
+5. **Install deps** — `make setup` auto-detects and installs dependencies (override with `HARNESS_SETUP_CMD`)
+6. **Fill in scripts** — `scripts/harness/*.sh` with real project commands (not stubs)
+7. **Add observability** — implement `hlog()` per the language example in docs/OBSERVABILITY.md; follow the Level Policy
+8. **Validate** — `make -f Makefile.harness ci` must pass; `scripts/verify_customized.sh .` catches leftover boilerplate; `scripts/audit_harness.sh .` checks for gaps
+9. **Iterate** — observe an agent run, patch gaps, re-audit
 
 ## Agent Verify Loop
 
