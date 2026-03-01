@@ -10,7 +10,22 @@
 
 You are initializing an AGENTS.md file for this repository. AGENTS.md is **persistent context** — it's loaded every time an agent works in this repo. Think of it as a **routing table for agent attention**: what to run, where truth lives, how to find things fast, and what not to do.
 
-### Step 1: Explore the repo
+### Step 1: Check for existing AGENTS.md
+
+```bash
+cat AGENTS.md 2>/dev/null
+```
+
+If an AGENTS.md already exists, you are **updating**, not creating from scratch:
+- Preserve any manually-added sections, rules, or gotchas
+- Update commands, project map, and docs index to reflect the current repo state
+- Remove references to files/directories that no longer exist
+- Add new docs, directories, or commands that have appeared since the last update
+- Keep the file under 8KB
+
+If no AGENTS.md exists, you are creating one fresh.
+
+### Step 2: Explore the repo
 
 Before writing anything, explore the project:
 
@@ -36,9 +51,9 @@ ls .next-docs/ 2>/dev/null
 ls ADR/ 2>/dev/null || ls docs/adr/ 2>/dev/null
 ```
 
-### Step 2: Write AGENTS.md
+### Step 3: Write or update AGENTS.md
 
-Write an AGENTS.md to the repo root with these sections. **Keep it under 8KB.** Every line must earn its place — agents read this on every turn.
+Write (or update) AGENTS.md in the repo root with these sections. **Keep it under 8KB.** Every line must earn its place — agents read this on every turn.
 
 #### Required Sections
 
@@ -128,7 +143,7 @@ If the repo has framework docs locally (e.g., `.next-docs/`, `vendor/docs/`), in
 - **Conventions** — naming patterns, file organization rules, import ordering
 - **Known Gotchas** — things that break in non-obvious ways
 
-### Step 3: Verify
+### Step 4: Verify
 
 After writing AGENTS.md:
 
