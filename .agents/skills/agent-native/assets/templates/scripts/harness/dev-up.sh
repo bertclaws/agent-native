@@ -39,34 +39,71 @@ if [ -f "$root_dir/Tiltfile" ] && command -v tilt >/dev/null 2>&1; then
   exit 0
 fi
 
-# .NET Aspire
-if grep -rq "Aspire" "$root_dir"/*.csproj "$root_dir"/**/*.csproj 2>/dev/null; then
-  echo "Aspire project detected — starting with dotnet run..."
-  local apphost
-  apphost=$(find "$root_dir" -name "*.AppHost.csproj" -o -name "*AppHost.csproj" | head -1)
-  if [ -n "$apphost" ]; then
-    dotnet run --project "$apphost"
-  else
-    dotnet run
-  fi
+# .NET Aspire (AppHost project)
+apphost=$(find "$root_dir" -maxdepth 3 -name "*AppHost*.csproj" 2>/dev/null | head -1)
+if [ -n "$apphost" ]; then
+  echo "Aspire AppHost detected — starting: dotnet run --project $apphost"
+  dotnet run --project "$apphost"
   exit 0
 fi
 
-# Fallback: just run the app in dev mode
+# ─── Fallback: run the app locally in dev mode ─────────────────────
+
+# Node.js
 if [ -f "$root_dir/package.json" ]; then
   if node -e 'const p=require("./package.json"); process.exit(p.scripts&&p.scripts.dev?0:1)' 2>/dev/null; then
     echo "Starting: npm run dev"
     npm run dev
     exit 0
   fi
+  if node -e 'const p=require("./package.json"); process.exit(p.scripts&&p.scripts.start?0:1)' 2>/dev/null; then
+    echo "Starting: npm start"
+    npm start
+    exit 0
+  fi
 fi
 
+# Python
 if [ -f "$root_dir/pyproject.toml" ]; then
   if grep -qE "uvicorn|fastapi" "$root_dir/pyproject.toml" 2>/dev/null; then
     echo "Starting: uvicorn with reload"
-    uv run uvicorn app.main:app --reload --port 8080
+    if command -v uv >/dev/null 2>&1; then
+      uv run uvicorn app.main:app --reload --port 8080
+    else
+      python3 -m uvicorn app.main:app --reload --port 8080
+    fi
     exit 0
   fi
+  if grep -qE "flask" "$root_dir/pyproject.toml" 2>/dev/null; then
+    echo "Starting: flask dev server"
+    if command -v uv >/dev/null 2>&1; then
+      uv run flask run --debug --port 8080
+    else
+      python3 -m flask run --debug --port 8080
+    fi
+    exit 0
+  fi
+fi
+
+# Go
+if [ -f "$root_dir/go.mod" ] && command -v go >/dev/null 2>&1; then
+  echo "Starting: go run ."
+  go run .
+  exit 0
+fi
+
+# Rust
+if [ -f "$root_dir/Cargo.toml" ] && command -v cargo >/dev/null 2>&1; then
+  echo "Starting: cargo run"
+  cargo run
+  exit 0
+fi
+
+# .NET (non-Aspire)
+if ls "$root_dir"/*.csproj >/dev/null 2>&1 || ls "$root_dir"/*.sln >/dev/null 2>&1; then
+  echo "Starting: dotnet run"
+  dotnet run
+  exit 0
 fi
 
 echo "ERROR: Cannot detect dev environment setup."
@@ -74,5 +111,5 @@ echo "Set HARNESS_DEV_UP_CMD or customize scripts/harness/dev-up.sh"
 echo ""
 echo "Examples:"
 echo "  export HARNESS_DEV_UP_CMD='docker compose up -d && npm run dev'"
-echo "  export HARNESS_DEV_UP_CMD='tilt up'"
+echo "  export HARNESS_DEV_UP_CMD='go run ./cmd/server'"
 exit 1
