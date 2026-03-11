@@ -22,7 +22,7 @@ This creates:
 - `PLANS.md` — durable planning context for multi-step tasks
 - `docs/ARCHITECTURE.md` — module boundaries and data flow
 - `docs/OBSERVABILITY.md` — JSONL logging convention + jq query patterns
-- `Makefile.harness` — `make setup`, `make format`, `make smoke`, `make check`, `make ci`
+- `Makefile.harness` — `make setup`, `make format`, `make smoke`, `make check`, `make ci`, `make dev-up`, `make dev-down`
 - `scripts/harness/` — deterministic wrappers (setup, format, smoke, test, lint, typecheck)
 - `.harness/` — JSONL telemetry files + jq query library (gitignored)
 - `.github/workflows/harness.yml` — CI integration
@@ -43,7 +43,7 @@ This creates:
 ## The Nine Practices
 
 ### 1. Make Easy To Do Hard Thing
-One command for every high-value task: `make setup`, `make format`, `make smoke`, `make check`, `make ci`. No manual prep.
+One command for every high-value task: `make setup`, `make format`, `make smoke`, `make check`, `make ci`, `make dev-up`, `make dev-down`. No manual prep.
 
 ### 2. Communicate Actionable Constraints With Compact Docs
 `AGENTS.md` — short, concrete, command-first. Not narrative prose.
@@ -81,6 +81,9 @@ See `docs/OBSERVABILITY.md` for full logging convention, field names, and langua
 
 ### 6. Bring Your Own Harness
 Repo-local wrappers in `scripts/harness/`. Same commands work locally and in CI.
+
+### Dev Environment Lifecycle
+`make dev-up` starts the full local dev environment (databases, services, the app). `make dev-down` tears it down. Auto-detects Docker Compose, Tilt, Aspire, devcontainers, and `npm run dev`. Override with `HARNESS_DEV_UP_CMD` / `HARNESS_DEV_DOWN_CMD` for custom setups.
 
 ### 7. Prototype In Natural Language First
 Draft logic and tests in prose in `PLANS.md` before coding.

@@ -87,6 +87,8 @@ templates=(
   "scripts/harness/test.sh"
   "scripts/harness/lint.sh"
   "scripts/harness/typecheck.sh"
+  "scripts/harness/dev-up.sh"
+  "scripts/harness/dev-down.sh"
   ".github/workflows/harness.yml"
 )
 
@@ -119,7 +121,9 @@ chmod +x \
   "$target_path/scripts/harness/smoke.sh" \
   "$target_path/scripts/harness/test.sh" \
   "$target_path/scripts/harness/lint.sh" \
-  "$target_path/scripts/harness/typecheck.sh"
+  "$target_path/scripts/harness/typecheck.sh" \
+  "$target_path/scripts/harness/dev-up.sh" \
+  "$target_path/scripts/harness/dev-down.sh"
 
 # Create .harness/ observability directory and jq query library
 mkdir -p "$target_path/.harness/queries"

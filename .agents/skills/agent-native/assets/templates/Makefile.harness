@@ -1,4 +1,4 @@
-.PHONY: setup format smoke test lint typecheck check ci verify observe
+.PHONY: setup format smoke test lint typecheck check ci dev-up dev-down verify observe
 
 setup:
 	@./scripts/harness/setup.sh
@@ -21,6 +21,13 @@ typecheck:
 check: lint typecheck
 
 ci: smoke check test
+
+# Dev environment lifecycle
+dev-up:
+	@./scripts/harness/dev-up.sh
+
+dev-down:
+	@./scripts/harness/dev-down.sh
 
 # Agent verify loop: run checks + inspect runtime telemetry
 verify: ci

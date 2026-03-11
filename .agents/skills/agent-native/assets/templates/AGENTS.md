@@ -21,6 +21,8 @@ Run from repository root:
 | Static checks | `make check` |
 | Full test suite | `make test` |
 | CI-equivalent local run | `make ci` |
+| Start dev environment | `make dev-up` |
+| Stop dev environment | `make dev-down` |
 
 ## Debugging Loop
 
